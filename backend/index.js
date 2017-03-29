@@ -17,6 +17,8 @@ MongoClient.connect(url, function(err, db) {
     }
 });
 app.post('/login', function(req, res) {
+    //TODO: Generate session token
+        //Consider hash(username+expiration)
     var user = gCol.findOne({"email": req.body.email},
         function(e, d) {
             if (d) {
@@ -30,14 +32,10 @@ app.post('/login', function(req, res) {
 });
 app.get('/register', function(req, res) {
     var salt = bcrypt.genSaltSync();
-    var hash = bcrypt.hashSync("bacon", bcrypt.genSaltSync());
-    gCol.insert( {'email': 'johnjwesthoff@gmail.com',
-                  'pass' : hash} );
-    gCol.find().toArray(function(err, docs) {
-        var me = docs[0];
-        var d = bcrypt.compareSync("bacon", me.pass);
-        //res.json(d);
-        res.json(docs);
-    });
+    var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
+    gCol.insert( {'email': req.body.email,
+                  'pass' : hash,
+                  'friends': []} );
+    res.json({'status': false});
 });
   
