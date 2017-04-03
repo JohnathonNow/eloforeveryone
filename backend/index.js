@@ -47,7 +47,14 @@ app.post('/login', function(req, res) {
 
 });
 app.post('/challenges', function(req, res) {
-    gChallenges.find({"email": req.body.email}).toArray(
+    gChallenges.insert( {'email': req.body.email,
+                         'foe': req.body.foe} );
+    res.json({'status': true});
+});
+app.put('/challenges', function(req, res) {
+                console.log(req.body.email);
+    gChallenges.find({$or:[{"email": req.body.email},
+                           {"foe"  : req.body.email}]}).toArray(
         function(e, d) {
             if (!e && d) {
                 console.log(d);
