@@ -7,6 +7,7 @@ var url = 'mongodb://localhost:27017/john';
 var gDB;
 var gUsers;
 var gChallenges;
+var gFriends;
 MongoClient.connect(url, function(err, db) {
     if (err != null) {
         db.close();
@@ -15,27 +16,14 @@ MongoClient.connect(url, function(err, db) {
         gDB = db;
         gUsers = db.collection('users');
         gChallenges = db.collection('challenges');
+        gFriends = db.collection('friends');
         app.listen(3111);
     }
-});
-app.post('/', function(req, res) {
-    //TODO: Generate session token
-        //Consider hash(username+expiration)
-    var user = gUsers.findOne({"email": req.body.email},
-        function(e, d) {
-            if (d) {
-                var s = bcrypt.compareSync(req.body.pass, d.pass);
-                res.json({'status': s});
-            } else {
-                res.json({'status': false});
-            }
-        });
-
 });
 app.post('/login', function(req, res) {
     //TODO: Generate session token
         //Consider hash(username+expiration)
-    var user = gUsers.findOne({"email": req.body.email},
+    var user = gUsers.findOne({"user": req.body.user},
         function(e, d) {
             if (d) {
                 var s = bcrypt.compareSync(req.body.pass, d.pass);
@@ -47,18 +35,32 @@ app.post('/login', function(req, res) {
 
 });
 app.post('/challenges', function(req, res) {
-    gChallenges.insert( {'email': req.body.email,
-                         'foe': req.body.foe} );
+    gChallenges.insert( {'user' : req.body.user,
+                         'foe'  : req.body.foe} );
     res.json({'status': true});
 });
 app.put('/challenges', function(req, res) {
-                console.log(req.body.email);
-    gChallenges.find({$or:[{"email": req.body.email},
-                           {"foe"  : req.body.email}]}).toArray(
+    gChallenges.find({$or:[{'user' : req.body.user},
+                           {'foe'  : req.body.user}]}).toArray(
         function(e, d) {
             if (!e && d) {
-                console.log(d);
                 res.json({'status': true, 'challenges': d});
+            } else {
+                res.json({'status': false});
+            }
+        });
+
+});
+app.post('/friends', function(req, res) {
+    gFriends.insert({'user': req.body.user,
+                     'friend': req.body.friend} );
+    res.json({'status': true});
+});
+app.put('/friends', function(req, res) {
+    gFriends.find({"user": req.body.user}).toArray(
+        function(e, d) {
+            if (!e && d) {
+                res.json({'status': true, 'friends': d});
             } else {
                 res.json({'status': false});
             }
@@ -68,9 +70,8 @@ app.put('/challenges', function(req, res) {
 app.post('/register', function(req, res) {
     var salt = bcrypt.genSaltSync();
     var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
-    gUsers.insert( {'email': req.body.email,
-                  'pass' : hash,
-                  'friends': []} );
-    res.json({'status': false});
+    gUsers.insert( {'user': req.body.user,
+                    'pass' : hash} );
+    res.json({'status': true});
 });
   
