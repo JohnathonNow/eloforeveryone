@@ -2,12 +2,20 @@ var express = require('express');
 var bcrypt = require('bcrypt');
 var app = express();
 app.use(require('body-parser').json())
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
+
 var MongoClient = require('mongodb').MongoClient;
 var url = 'mongodb://localhost:27017/john';
+
 var gDB;
 var gUsers;
 var gChallenges;
 var gFriends;
+
 MongoClient.connect(url, function(err, db) {
     if (err != null) {
         db.close();
@@ -23,15 +31,25 @@ MongoClient.connect(url, function(err, db) {
 app.post('/login', function(req, res) {
     //TODO: Generate session token
         //Consider hash(username+expiration)
-    var user = gUsers.findOne({"user": req.body.user},
-        function(e, d) {
-            if (d) {
-                var s = bcrypt.compareSync(req.body.pass, d.pass);
-                res.json({'status': s});
-            } else {
-                res.json({'status': false});
-            }
-        });
+    try {
+        var user = gUsers.findOne({"user": req.body.user},
+            function(e, d) {
+                try {
+                    if (d && !e) {
+                        var s = bcrypt.compareSync(req.body.pass, d.pass);
+                        res.json({'status': s});
+                    } else {
+                        res.json({'status': false});
+                    }
+                } catch(err) {
+                    console.log(err);
+                    res.json({'status': false});
+                }
+            });
+    } catch(err) {
+        console.log(err);
+        res.json({'status': false});
+    }
 
 });
 app.post('/challenges', function(req, res) {
@@ -39,7 +57,7 @@ app.post('/challenges', function(req, res) {
                          'foe'  : req.body.foe} );
     res.json({'status': true});
 });
-app.put('/challenges', function(req, res) {
+app.post('/newchallenge', function(req, res) {
     gChallenges.find({$or:[{'user' : req.body.user},
                            {'foe'  : req.body.user}]}).toArray(
         function(e, d) {
@@ -56,7 +74,7 @@ app.post('/friends', function(req, res) {
                      'friend': req.body.friend} );
     res.json({'status': true});
 });
-app.put('/friends', function(req, res) {
+app.post('/friendlist', function(req, res) {
     gFriends.find({"user": req.body.user}).toArray(
         function(e, d) {
             if (!e && d) {
@@ -68,10 +86,14 @@ app.put('/friends', function(req, res) {
 
 });
 app.post('/register', function(req, res) {
-    var salt = bcrypt.genSaltSync();
-    var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
-    gUsers.insert( {'user': req.body.user,
-                    'pass' : hash} );
-    res.json({'status': true});
+    if (gUsers.find({'user': req.body.user}).limit(1).count(with_limit_and_skip=true) == 0) {
+        var salt = bcrypt.genSaltSync();
+        var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
+        gUsers.insert( {'user': req.body.user,
+                        'pass' : hash} );
+        res.json({'status': true});
+    } else {
+        res.json({'status': false});
+    }
 });
   
