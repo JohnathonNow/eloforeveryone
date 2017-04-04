@@ -35,7 +35,7 @@
     </div>
     <div id=mainpage class='page'>
         <H2>Home</H2>
-        <div class='view'>Loading Matches...</div>
+        <div class='view' id='clist'>Loading Matches...</div>
     </div>
     <div id=friendpage class='page'>
         <H2>Friends</H2>
@@ -96,7 +96,7 @@
     <div id=userinfopage class='page'>
         <H2 id='userheader'>User</H2>
         <div class='view' id='userinfo'>Loading User Info...</div>
-        <div onclick='jump("matchpage")' class='button'>Challenge</div>
+        <div onclick='issueChallenge();' class='button'>Challenge</div>
     </div>
     <div class="bottom" id="bottom">
         <div class='buttonsmall' onclick='jumpi("actpage")'>Activities</div>
