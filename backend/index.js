@@ -52,12 +52,12 @@ app.post('/login', function(req, res) {
     }
 
 });
-app.post('/challenges', function(req, res) {
+app.post('/newchallenge', function(req, res) {
     gChallenges.insert( {'user' : req.body.user,
                          'foe'  : req.body.foe} );
     res.json({'status': true});
 });
-app.post('/newchallenge', function(req, res) {
+app.post('/challenges', function(req, res) {
     gChallenges.find({$or:[{'user' : req.body.user},
                            {'foe'  : req.body.user}]}).toArray(
         function(e, d) {
