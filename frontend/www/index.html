@@ -14,24 +14,24 @@
     <div id=startpage class=page>
         <h2>Login</h2>
         <label>Email:</label>
-        <input type="text" name="email"><br>
+        <input type="text" id="email"><br>
         <label>Password:</label>
-        <input type="password" name="password"><br>
+        <input type="password" id="password"><br>
         <br class="clearFloat">
-        <div onclick='jump("mainpage")' class='button'>Login</div>
+        <div onclick='login();' class='button'>Login</div>
         <div onclick='jump("registerpage")' class='button'>Register</div>
     </div>
     <div id=registerpage class=page>
         <h2>Register</h2>
         <label>Email:</label>
-        <input type="text" name="reg_email"><br>
+        <input type="text" id="reg_email"><br>
         <label>Password:</label>
-        <input type="password" name="reg_password1"><br>
+        <input type="password" id="reg_password1"><br>
         <label>Confirmation:</label>
-        <input type="password" name="reg_password2"><br>
+        <input type="password" id="reg_password2"><br>
         <br class="clearFloat">
         <div onclick='jump("startpage")' class='button'>Back</div>
-        <div onclick='jump("startpage")' class='button'>Register</div>
+        <div onclick='register()' class='button'>Register</div>
     </div>
     <div id=mainpage class='page'>
         <H2>Home</H2>
@@ -45,9 +45,9 @@
     <div id=afpage class=page>
         <h2>Add Friend</h2>
         <label>Email:</label>
-        <input type="text" name="af_email"><br>
+        <input type="text" id="af_email"><br>
         <br class="clearFloat">
-        <div onclick='jump("mainpage")' class='button'>Add Friend</div>
+        <div onclick='addFriend();' class='button'>Add Friend</div>
     </div>
     <div id=clubpage class='page'>
         <H2>Clubs</H2>
