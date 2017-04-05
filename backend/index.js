@@ -1,3 +1,5 @@
+const TOKEN_TTL = 1000/*ms/s*/*60/*s/min*/*60/*min/hr*/*24/*hours*/;
+
 var express = require('express');
 var bcrypt = require('bcrypt');
 var app = express();
@@ -44,14 +46,17 @@ app.post('/login', function(req, res) {
                 try {
                     if (d && !e) {
                         var s = bcrypt.compareSync(req.body.pass, d.pass);
-                        res.json({'status': s});
-                    } else {
-                        res.json({'status': false});
+                        if (s) {
+                            var _t = (new Date()).getTime() + TOKEN_TTL;
+                            d.expiration = _t;
+                            d.token = d._id+_t;
+                            res.json({'status': true, 'token': d.token});
+                        }
                     }
                 } catch(err) {
                     console.log(err);
-                    res.json({'status': false});
                 }
+                res.json({'status': false});
             });
     } catch(err) {
         console.log(err);
