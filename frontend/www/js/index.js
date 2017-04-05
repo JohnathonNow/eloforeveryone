@@ -3,7 +3,10 @@ var gScore = 0;
 var gCurPage = '';
 var gFriendNum = 0;
 var gChalNum = 0;
+var gActNum = 0;
+var gClubNum = 0;
 var gSelFriend = '';
+var gSelAct = '';
 var gUser = '';
 
 function onLoad()
@@ -22,6 +25,12 @@ function onPageLoad() {
         case 'mainpage':
             populateChallenges();
         break;
+        case 'actpage':
+            populateActivities();
+        break;
+        case 'actclubpage':
+            populateClubs();
+        break;
     }
 }
 
@@ -30,73 +39,9 @@ function onfriend(e) {
     jump('userinfopage');
 }
 
-function populateChallenges() {
-    var formData={
-        "user": gUser,
-    };
-    $.post({
-        url: 'http://johnwesthoff.com:3111/challenges',
-        crossDomain: true,
-        data: JSON.stringify(formData),
-        contentType: 'application/json',
-        processData: false,
-        success: function(responseData, textStatus, jqXHR) {
-            console.log(responseData);
-            if (responseData.status) {
-                $('#clist').empty();
-                var challenges = responseData.challenges;
-                gChalNum = 0;
-                if (challenges) {
-                    for (var i = 0; i < challenges.length; i += 1) {
-                        var name = "";
-                        if (challenges[i]['foe'] === gUser) {
-                            name = challenges[i]['user'];
-                        } else {
-                            name = challenges[i]['foe'];
-                        }
-                        var newfriend='<div class=\'friend\'\
-                                       id=\'chal'+gChalNum+'\'\
-                                       onclick=\'onfriend(event);\'\
-                                       >'+name+'</div>';
-                        gChalNum += 1;
-                        $('#clist').append(newfriend);
-                    } 
-                }
-            }
-        },
-        error: function (responseData, textStatus, errorThrown) {
-        }
-    });
-}
-function populateFriends() {
-    var formData={
-        "user": gUser,
-    };
-    $.post({
-        url: 'http://johnwesthoff.com:3111/friendlist',
-        crossDomain: true,
-        data: JSON.stringify(formData),
-        contentType: 'application/json',
-        processData: false,
-        success: function(responseData, textStatus, jqXHR) {
-            if (responseData.status) {
-                $('#friendlist').empty();
-                var friends = responseData.friends;
-                console.log(friends);
-                gFriendNum = 0;
-                for (var i = 0; i < friends.length; i += 1) {
-                var newfriend='<div class=\'friend\'\
-                               id=\'friend'+gFriendNum+'\'\
-                               onclick=\'onfriend(event);\'\
-                               >'+friends[i]['friend']+'</div>';
-                gFriendNum += 1;
-                $('#friendlist').append(newfriend);
-                } 
-            }
-        },
-        error: function (responseData, textStatus, errorThrown) {
-        }
-    });
+function onactivity(e) {
+    gSelAct = e.target.id;
+    jump('actclubpage');
 }
 
 function addFriend() {
@@ -134,6 +79,29 @@ function issueChallenge() {
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
                 jump("matchpage");
+            } 
+        },
+        error: function (responseData, textStatus, errorThrown) {
+        }
+    });
+}
+function createClub() {
+    var formData={
+        "user": gUser,
+        "activity": $("#"+gSelAct).html(),
+        "description": $("#ac_description").val(),
+        "name": $("#ac_name").val(),
+        "location": $("#ac_location").val(),
+    };
+    $.post({
+        url: 'http://johnwesthoff.com:3111/clubs',
+        crossDomain: true,
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        processData: false,
+        success: function(responseData, textStatus, jqXHR) {
+            if (responseData.status) {
+                jump("actclubpage");
             } 
         },
         error: function (responseData, textStatus, errorThrown) {

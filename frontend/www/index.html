@@ -7,6 +7,7 @@
     <script type='text/javascript' charset='utf-8' src='cordova.js'></script>
     <script src="js/jquery.min.js"></script>
     <script type='text/javascript' charset='utf-8' src='js/index.js'></script>
+    <script type='text/javascript' charset='utf-8' src='js/pageloaders.js'></script>
 </head>
 <body onload='onLoad()' style='margin:0px'>
 <div class='screen'>
@@ -69,13 +70,13 @@
     <div id=newclubpage class=page>
         <h2>Add Club</h2>
         <label>Name:</label>
-        <input type="text" name="ac_name"><br>
-        <label>Activity:</label>
-        <input type="text" name="ac_activity"><br>
+        <input type="text" id="ac_name"><br>
+        <label>Description:</label>
+        <input type="text" id="ac_description"><br>
         <label>Location:</label>
-        <input type="text" name="ac_location"><br>
+        <input type="text" id="ac_location"><br>
         <br class="clearFloat">
-        <div onclick='jump("mainpage")' class='button'>Create</div>
+        <div onclick='createClub();' class='button'>Create</div>
     </div>
     <div id=actclubinfopage class='page'>
         <H2>Club</H2>
