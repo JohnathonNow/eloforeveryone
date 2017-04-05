@@ -127,7 +127,8 @@ app.get('/clubs/:activity', function(req, res) {
         });
 });
 app.post('/register', function(req, res) {
-    if (gUsers.find({'user': req.body.user}).limit(1).count(with_limit_and_skip=true) == 0) {
+    console.log(gUsers.find({'user': req.body.user}).limit(1).count());
+    if (gUsers.find({'user': req.body.user}).limit(1).count() == 0) {
         var salt = bcrypt.genSaltSync();
         var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
         gUsers.insert( {'user' : req.body.user,
