@@ -164,7 +164,8 @@ function register()
         return;
     }
     var formData={
-        "user": $("#reg_email").val(),
+        "user": $("#reg_user").val(),
+        "email": $("#reg_email").val(),
         "pass": $("#reg_password1").val(),
     };
     $.post({
@@ -177,7 +178,7 @@ function register()
         success: function(responseData, textStatus, jqXHR) {
             if (responseData['status']) {
                 $("#password").val(formData['pass']);
-                $("#email").val(formData['user']);
+                $("#user").val(formData['user']);
                 login();
             }
         },
