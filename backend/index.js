@@ -117,11 +117,10 @@ app.post('/clubs', function(req, res) {
     res.json({'status': true});
 });
 app.get('/clubs/:activity', function(req, res) {
-    console.log(req.params.activity);
-    gActivities.find({'activity': req.params.activity}).toArray(
+    gClubs.find({'activity': req.params.activity}).toArray(
         function(e, d) {
             if (!e && d) {
-                res.json({'status': true, 'activities': d});
+                res.json({'status': true, 'clubs': d, 'activity': req.params.activity});
             } else {
                 res.json({'status': false});
             }
