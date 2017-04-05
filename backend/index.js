@@ -5,6 +5,7 @@ app.use(require('body-parser').json())
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE");
     next();
 });
 
@@ -15,6 +16,9 @@ var gDB;
 var gUsers;
 var gChallenges;
 var gFriends;
+var gActivities;
+var gClubs;
+var gClubMembers;
 
 MongoClient.connect(url, function(err, db) {
     if (err != null) {
@@ -25,6 +29,9 @@ MongoClient.connect(url, function(err, db) {
         gUsers = db.collection('users');
         gChallenges = db.collection('challenges');
         gFriends = db.collection('friends');
+        gActivities = db.collection('activities');
+        gClubs = db.collection('clubs');
+        gClubMembers = db.collection('clubmembers');
         app.listen(3111);
     }
 });
@@ -83,7 +90,39 @@ app.post('/friendlist', function(req, res) {
                 res.json({'status': false});
             }
         });
-
+});
+app.post('/activities', function(req, res) {
+    gActivities.insert({'name': req.body.name});
+    res.json({'status': true});
+});
+app.get('/activities', function(req, res) {
+    gActivities.find().toArray(
+        function(e, d) {
+            if (!e && d) {
+                res.json({'status': true, 'activities': d});
+            } else {
+                res.json({'status': false});
+            }
+        });
+});
+app.post('/clubs', function(req, res) {
+    gClubs.insert({'name': req.body.name,
+                   'activity': req.body.activity,
+                   'location': req.body.location,
+                   'description': req.body.description,
+                   'creator': req.body.user});
+    res.json({'status': true});
+});
+app.get('/clubs/:activity', function(req, res) {
+    console.log(req.activity);
+    gActivities.find({'activity': req.activity}).toArray(
+        function(e, d) {
+            if (!e && d) {
+                res.json({'status': true, 'activities': d});
+            } else {
+                res.json({'status': false});
+            }
+        });
 });
 app.post('/register', function(req, res) {
     if (gUsers.find({'user': req.body.user}).limit(1).count(with_limit_and_skip=true) == 0) {
