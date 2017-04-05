@@ -60,8 +60,11 @@ app.post('/login', function(req, res) {
 
 });
 app.post('/newchallenge', function(req, res) {
-    gChallenges.insert( {'user' : req.body.user,
-                         'foe'  : req.body.foe} );
+    gChallenges.insert( {'user'       : req.body.user,
+                         'foe'        : req.body.foe,
+                         'status'     : 'open',
+                         'user_score' : 0,
+                         'foe_score'  : 0} );
     res.json({'status': true});
 });
 app.post('/challenges', function(req, res) {
@@ -114,11 +117,10 @@ app.post('/clubs', function(req, res) {
     res.json({'status': true});
 });
 app.get('/clubs/:activity', function(req, res) {
-    console.log(req.activity);
-    gActivities.find({'activity': req.activity}).toArray(
+    gClubs.find({'activity': req.params.activity}).toArray(
         function(e, d) {
             if (!e && d) {
-                res.json({'status': true, 'activities': d});
+                res.json({'status': true, 'clubs': d, 'activity': req.params.activity});
             } else {
                 res.json({'status': false});
             }
