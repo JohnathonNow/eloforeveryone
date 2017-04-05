@@ -136,7 +136,7 @@ function jump(newpage)
 
 function login()
 {
-    gUser = $("#email").val();
+    gUser = $("#user").val();
     var formData={
         "user": gUser,
         "pass": $("#password").val(),
@@ -176,6 +176,7 @@ function register()
         contentType: 'application/json',
         processData: false,
         success: function(responseData, textStatus, jqXHR) {
+            console.log(responseData);
             if (responseData['status']) {
                 $("#password").val(formData['pass']);
                 $("#user").val(formData['user']);
