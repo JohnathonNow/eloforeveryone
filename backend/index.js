@@ -2,6 +2,7 @@ const TOKEN_TTL = 1000/*ms/s*/*60/*s/min*/*60/*min/hr*/*24/*hours*/;
 
 var express = require('express');
 var bcrypt = require('bcrypt');
+var hash = require('hash.js')
 var app = express();
 app.use(require('body-parser').json())
 app.use(function(req, res, next) {
@@ -38,8 +39,6 @@ MongoClient.connect(url, function(err, db) {
     }
 });
 app.post('/login', function(req, res) {
-    //TODO: Generate session token
-        //Consider hash(username+expiration)
     try {
         var user = gUsers.findOne({"user": req.body.user},
             function(e, d) {
@@ -49,18 +48,22 @@ app.post('/login', function(req, res) {
                         if (s) {
                             var _t = (new Date()).getTime() + TOKEN_TTL;
                             d.expiration = _t;
-                            d.token = d._id+_t;
+                            d.token = hash.sha256().update(d._id+_t).digest('hex')
+                            gUsers.updateOne({"_id": d._id}, d);
                             res.json({'status': true, 'token': d.token});
+                            return;
                         }
                     }
                 } catch(err) {
                     console.log(err);
                 }
                 res.json({'status': false});
+                return;
             });
     } catch(err) {
         console.log(err);
         res.json({'status': false});
+        return
     }
 
 });
