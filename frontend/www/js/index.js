@@ -8,6 +8,7 @@ var gClubNum = 0;
 var gSelFriend = '';
 var gSelAct = '';
 var gUser = '';
+var gToken = '';
 
 function onLoad()
 {
@@ -150,6 +151,8 @@ function login()
         processData: false,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData['status']) {
+                gToken = responseData['token'];
+                console.log(gToken);
                 jump('mainpage');
             }
         },
