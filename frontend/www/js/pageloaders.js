@@ -3,10 +3,8 @@ function populateClubs() {
         url: 'http://johnwesthoff.com:3111/clubs/'+$("#"+gSelAct).html(),
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
-            console.log(responseData);
             if (responseData.status) {
                 var clubs = responseData.clubs;
-                console.log(clubs);
                 gClubNum = 0;
                 $('#activityclublist').empty();
                 if (clubs) {
@@ -31,7 +29,6 @@ function populateActivities() {
         url: 'http://johnwesthoff.com:3111/activities',
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
-            console.log(responseData);
             if (responseData.status) {
                 var activities = responseData.activities;
                 gActNum = 0;
@@ -64,7 +61,6 @@ function populateChallenges() {
         contentType: 'application/json',
         processData: false,
         success: function(responseData, textStatus, jqXHR) {
-            console.log(responseData);
             if (responseData.status) {
                 $('#clist').empty();
                 var challenges = responseData.challenges;
@@ -105,7 +101,6 @@ function populateFriends() {
             if (responseData.status) {
                 $('#friendlist').empty();
                 var friends = responseData.friends;
-                console.log(friends);
                 gFriendNum = 0;
                 for (var i = 0; i < friends.length; i += 1) {
                 var newfriend='<div class=\'friend\'\

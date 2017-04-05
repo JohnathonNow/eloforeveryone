@@ -47,7 +47,7 @@ function onactivity(e) {
 function addFriend() {
     var formData={
         "user": gUser,
-        "friend": $("#af_email").val(),
+        "friend": $("#af_user").val(),
     };
     $.post({
         url: 'http://johnwesthoff.com:3111/friends',
