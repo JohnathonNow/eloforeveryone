@@ -7,6 +7,8 @@ var gActNum = 0;
 var gClubNum = 0;
 var gSelFriend = '';
 var gSelAct = '';
+var gSelClub = '';
+var gMyClubs = null;
 var gUser = '';
 var gToken = '';
 
@@ -18,7 +20,8 @@ function onLoad()
 function onPageLoad() {
     switch (gCurPage) {
         case 'userinfopage':
-            $('#userheader').html($('#'+gSelFriend).html());            
+            $('#userheader').html(gSelFriend);            
+            populateUserinfo();
         break;
         case 'friendpage':
             populateFriends();
@@ -32,22 +35,41 @@ function onPageLoad() {
         case 'actclubpage':
             populateClubs();
         break;
+        case 'actclubinfopage':
+            populateClubInfo();
+        break;
+        case 'clubpage':
+            populateMyClubs();
+        break;
     }
 }
 
 function onfriend(e) {
-    gSelFriend = e.target.id;
+    gSelFriend = $("#"+e.target.id).html();
     jump('userinfopage');
 }
 
 function onactivity(e) {
-    gSelAct = e.target.id;
+    gSelAct = $("#"+e.target.id).html();
     jump('actclubpage');
+}
+
+function onclub(e) {
+    gSelClub = $("#"+e.target.id).html();
+    jump('actclubinfopage');
+}
+
+function onmyclub(i) {
+    var c = gMyClubs[i];
+    gSelClub = c.club;
+    gSelAct = c.activity;
+    jump('actclubinfopage');
 }
 
 function addFriend() {
     var formData={
         "user": gUser,
+        "token": gToken,
         "friend": $("#af_user").val(),
     };
     $.post({
@@ -66,9 +88,32 @@ function addFriend() {
     });
 }
 
+function joinClub() {
+    var formData={
+        "user": gUser,
+        "token": gToken,
+        "club": gSelClub,
+        "activity": gSelAct,
+    };
+    $.post({
+        url: 'http://johnwesthoff.com:3111/joinclub',
+        crossDomain: true,
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        processData: false,
+        success: function(responseData, textStatus, jqXHR) {
+            if (responseData.status) {
+                jump("actclubinfopage");
+            } 
+        },
+        error: function (responseData, textStatus, errorThrown) {
+        }
+    });
+}
 function issueChallenge() {
     var formData={
         "user": gUser,
+        "token": gToken,
         "foe": $("#userheader").html(),
     };
     $.post({
@@ -88,8 +133,9 @@ function issueChallenge() {
 }
 function createClub() {
     var formData={
+        "token": gToken,
         "user": gUser,
-        "activity": $("#"+gSelAct).html(),
+        "activity": gSelAct,
         "description": $("#ac_description").val(),
         "name": $("#ac_name").val(),
         "location": $("#ac_location").val(),
@@ -189,9 +235,4 @@ function register()
         error: function (responseData, textStatus, errorThrown) {
         }
     });
-}
-function score(a)
-{
-    gScore = gScore + a;
-    $( "#score" ).html("Score: " + gScore);
 }
