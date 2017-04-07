@@ -127,7 +127,7 @@ app.get('/clubmembers/:activity/:club', function(req, res) {
             }
         });
 });
-app.get('/clubs/:user', function(req, res) {
+app.get('/myclubs/:user', function(req, res) {
     gClubMembers.find({'user': req.params.user}).toArray(
         function(e, d) {
             if (!e && d) {
@@ -138,9 +138,12 @@ app.get('/clubs/:user', function(req, res) {
         });
 });
 app.post('/joinclub', function(req, res) {
-    gClubMembers.insert({'club': req.body.name,
+    gClubMembers.insert({'club': req.body.club,
                    'activity': req.body.activity,
-                   'user': req.body.user});
+                   'user': req.body.user,
+                   'wins': 0,
+                   'losses': 0,
+                   'draws': 0,});
     res.json({'status': true});
 });
 app.post('/clubs', function(req, res) {
@@ -163,15 +166,18 @@ app.get('/clubs/:activity', function(req, res) {
 });
 app.post('/register', function(req, res) {
     console.log(gUsers.find({'user': req.body.user}).limit(1).count());
-    if (gUsers.find({'user': req.body.user}).limit(1).count() == 0) {
-        var salt = bcrypt.genSaltSync();
-        var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
-        gUsers.insert( {'user' : req.body.user,
-                        'email': req.body.email,
-                        'pass' : hash} );
-        res.json({'status': true});
-    } else {
-        res.json({'status': false});
-    }
+    gUsers.findOne({'user': req.body.user}, function(e, d){
+        if (!d) {
+            console.log(e);
+            var salt = bcrypt.genSaltSync();
+            var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
+            gUsers.insert( {'user' : req.body.user,
+                            'email': req.body.email,
+                            'pass' : hash} );
+            res.json({'status': true});
+        } else {
+            res.json({'status': false});
+        }
+    });
 });
   
