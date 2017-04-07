@@ -115,6 +115,33 @@ app.get('/activities', function(req, res) {
                 res.json({'status': false});
             }
         });
+})
+app.get('/clubmembers/:activity/:club', function(req, res) {
+    gClubMembers.find({'activity': req.params.activity,
+                       'club': req.params.club}).toArray(
+        function(e, d) {
+            if (!e && d) {
+                res.json({'status': true, 'members': d});
+            } else {
+                res.json({'status': false});
+            }
+        });
+});
+app.get('/clubs/:user', function(req, res) {
+    gClubMembers.find({'user': req.params.user}).toArray(
+        function(e, d) {
+            if (!e && d) {
+                res.json({'status': true, 'clubs': d});
+            } else {
+                res.json({'status': false});
+            }
+        });
+});
+app.post('/joinclub', function(req, res) {
+    gClubMembers.insert({'club': req.body.name,
+                   'activity': req.body.activity,
+                   'user': req.body.user});
+    res.json({'status': true});
 });
 app.post('/clubs', function(req, res) {
     gClubs.insert({'name': req.body.name,
