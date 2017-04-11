@@ -5,26 +5,27 @@ function populateClubInfo() {
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
-                var members = responseData.members;
+                gClubInfo = responseData.members;
+                console.log(gClubInfo);
                 $('#actclubinfo').empty();
-                if (members) {
-                    console.log(members);
+                if (gClubInfo) {
+                    console.log(gClubInfo);
                     var header = '<div id="container">'+
                               '<div>User</div><div>Wins</div><div>'+
                               'Losses</div><div>Draws</div>';
                     $('#actclubinfo').append(header);
-                    for (var i = 0; i < members.length; i += 1) {
-                        var name = members[i]['user'];
-                        var wins = members[i]['wins'];
-                        var loss = members[i]['losses'];
-                        var draw = members[i]['draws'];
+                    for (var i = 0; i < gClubInfo.length; i += 1) {
+                        var name = gClubInfo[i]['user'];
+                        var wins = gClubInfo[i]['wins'];
+                        var loss = gClubInfo[i]['losses'];
+                        var draw = gClubInfo[i]['draws'];
                         var row = '<div id="container">'+
                                   '<div>'+name+'</div><div>'+wins+
                                   '</div><div>'+loss+'</div><div>'+draw+
                                   '</div>';
                         var newfriend='<div class=\'friend\'\
                                        id=\'clubin'+i+'\'\
-                                       onclick=\'onclub(event);\'\
+                                       onclick=\'onfriendclub('+i+');\'\
                                        >'+row+'</div>';
                         $('#actclubinfo').append(newfriend);
                     } 
@@ -74,7 +75,7 @@ function populateUserinfo() {
                         var name = gMyClubs[i]['club'];
                         var act = gMyClubs[i]['activity'];
                         var newfriend='<div class=\'friend\' '+
-                                       'id=\'club'+i+'\' '+
+                                       'id=\'fclub'+i+'\' '+
                                        'onclick=\'onmyclub('+i+');\'>'+
                                        act+': '+name+'</div>';
                         $('#userinfo').append(newfriend);
@@ -99,7 +100,7 @@ function populateMyClubs() {
                         var name = gMyClubs[i]['club'];
                         var act = gMyClubs[i]['activity'];
                         var newfriend='<div class=\'friend\' '+
-                                       'id=\'club'+i+'\' '+
+                                       'id=\'mclub'+i+'\' '+
                                        'onclick=\'onmyclub('+i+');\'>'+
                                        act+': '+name+'</div>';
                         $('#clublist').append(newfriend);

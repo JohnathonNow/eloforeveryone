@@ -9,6 +9,7 @@ var gSelFriend = '';
 var gSelAct = '';
 var gSelClub = '';
 var gMyClubs = null;
+var gClubInfo = null;
 var gUser = '';
 var gToken = '';
 
@@ -36,12 +37,18 @@ function onPageLoad() {
             populateClubs();
         break;
         case 'actclubinfopage':
+            console.log(gSelClub);
             populateClubInfo();
         break;
         case 'clubpage':
             populateMyClubs();
         break;
     }
+}
+
+function onfriendclub(i) {
+    gSelFriend = gClubInfo[i].user;
+    jump('userinfopage');
 }
 
 function onfriend(e) {
@@ -55,7 +62,11 @@ function onactivity(e) {
 }
 
 function onclub(e) {
+    console.log(e.target);
+    console.log(e.target.id);
     gSelClub = $("#"+e.target.id).html();
+    console.log($("#"+e.target.id).html());
+    console.log(gSelClub);
     jump('actclubinfopage');
 }
 
