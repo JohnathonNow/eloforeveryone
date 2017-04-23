@@ -95,3 +95,10 @@ body {
 .screen {
     min-height: 100%;
 }
+#container {
+  text-align: center;
+}
+#container div {
+  width: 25%;
+  display: inline-block;
+}
