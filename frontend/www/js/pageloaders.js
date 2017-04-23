@@ -119,13 +119,12 @@ function populateActivitiesM() {
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
                 var activities = responseData.activities;
-                gActNum = 0;
                 $('#activitylistm').empty();
                 if (activities) {
                     for (var i = 0; i < activities.length; i += 1) {
                         var name = activities[i]['name'];
                         var newfriend='<div class=\'friend\'\
-                                       id=\'act'+gActNum+'\'\
+                                       id=\'actm'+i+'\'\
                                        onclick=\'onactivitym(event);\'\
                                        >'+name+'</div>';
                         gActNum += 1;
@@ -178,19 +177,20 @@ function populateChallenges() {
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
                 $('#clist').empty();
-                var challenges = responseData.challenges;
+                gChallenges = responseData.challenges;
                 gChalNum = 0;
-                if (challenges) {
-                    for (var i = 0; i < challenges.length; i += 1) {
+                if (gChallenges) {
+                    for (var i = 0; i < gChallenges.length; i += 1) {
                         var name = "";
-                        if (challenges[i]['foe'] === gUser) {
-                            name = challenges[i]['user'];
+                        if (gChallenges[i]['foe'] === gUser) {
+                            name = gChallenges[i]['user'];
                         } else {
-                            name = challenges[i]['foe'];
+                            name = gChallenges[i]['foe'];
                         }
+                        name += ' - ' + gChallenges[i]['activity'];
                         var newfriend='<div class=\'friend\'\
                                        id=\'chal'+gChalNum+'\'\
-                                       onclick=\'onfriend(event);\'\
+                                       onclick=\'onChal('+i+');\'\
                                        >'+name+'</div>';
                         gChalNum += 1;
                         $('#clist').append(newfriend);

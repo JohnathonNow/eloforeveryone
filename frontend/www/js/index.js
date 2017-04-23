@@ -9,8 +9,10 @@ var gSelFriend = '';
 var gSelAct = '';
 var gSelClub = '';
 var gMyClubs = null;
+var gChallenges = null;
 var gClubInfo = null;
 var gUser = '';
+var gFoe = '';
 var gToken = '';
 
 function onLoad()
@@ -59,7 +61,17 @@ function onfriend(e) {
     jump('userinfopage');
 }
 
+function onChal(i) {
+    gSelAct = gChallenges[i].activity;
+    if (gUser === gChallenges[i].user) {
+        gFoe = gChallenges[i].foe;
+    } else {
+        gFoe = gChallenges[i].user;
+    }
+    jump("matchpage");
+}
 function onactivitym(e) {
+    gSelAct = $("#"+e.target.id).html();
     issueChallenge();
 }
 function onactivity(e) {
@@ -149,10 +161,12 @@ function unfriend() {
     });
 }
 function issueChallenge() {
+    gFoe = $("#userheader").html();
     var formData={
         "user": gUser,
-        "token": gToken,
-        "foe": $("#userheader").html(),
+        "gActNumtoken": gToken,
+        "activity": gSelAct,
+        "foe": gFoe,
     };
     $.post({
         url: 'http://johnwesthoff.com:3111/newchallenge',
