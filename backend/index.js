@@ -87,6 +87,11 @@ app.post('/challenges', function(req, res) {
         });
 
 });
+app.post('/unfriend', function(req, res) {
+    gFriends.remove({'user': req.body.user,
+                     'friend': req.body.foe} );
+    res.json({'status': true});
+});
 app.post('/friends', function(req, res) {
     gFriends.insert({'user': req.body.user,
                      'friend': req.body.friend} );
@@ -165,8 +170,9 @@ app.get('/clubs/:activity', function(req, res) {
         });
 });
 app.post('/register', function(req, res) {
-    console.log(gUsers.find({'user': req.body.user}).limit(1).count());
+            console.log('r');
     gUsers.findOne({'user': req.body.user}, function(e, d){
+            console.log(d);
         if (!d) {
             console.log(e);
             var salt = bcrypt.genSaltSync();
