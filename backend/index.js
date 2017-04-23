@@ -40,7 +40,7 @@ MongoClient.connect(url, function(err, db) {
 });
 app.post('/login', function(req, res) {
     try {
-        var user = gUsers.findOne({"user": req.body.user},
+        var user = gUsers.findOne({"userl": req.body.user.toLowerCase()},
             function(e, d) {
                 try {
                     if (d && !e) {
@@ -50,7 +50,9 @@ app.post('/login', function(req, res) {
                             d.expiration = _t;
                             d.token = hash.sha256().update(d._id+_t).digest('hex')
                             gUsers.updateOne({"_id": d._id}, d);
-                            res.json({'status': true, 'token': d.token});
+                            res.json({'status': true,
+                                      'token': d.token,
+                                      'user': d.user,});
                             return;
                         }
                     }
@@ -67,14 +69,31 @@ app.post('/login', function(req, res) {
     }
 
 });
+app.post('/score', function(req, res) {
+    gChallenges.find({"_id": req.body.id}).toArray(
+        function(e, d) {
+            if (!e && d) {
+                res.json({'status': true, 'friends': d});
+            } else {
+                res.json({'status': false});
+            }
+        });
+    res.json({'status': true});
+});
 app.post('/newchallenge', function(req, res) {
     gChallenges.insert( {'user'       : req.body.user,
                          'foe'        : req.body.foe,
                          'activity'   : req.body.activity,
                          'status'     : 'open',
                          'user_score' : 0,
-                         'foe_score'  : 0} );
-    res.json({'status': true});
+                         'foe_score'  : 0},
+                         function (err, d) {
+                            if (err == null) {
+                                res.json({'status': true, 'id': d.ops[0]._id});
+                            } else {
+                                res.json({'status': false});
+                            }
+                         });
 });
 app.post('/challenges', function(req, res) {
     gChallenges.find({$or:[{'user' : req.body.user},
@@ -171,8 +190,8 @@ app.get('/clubs/:activity', function(req, res) {
         });
 });
 app.post('/register', function(req, res) {
-            console.log('r');
-    gUsers.findOne({'user': req.body.user}, function(e, d){
+    nuser = req.body.user.toLowerCase();
+    gUsers.findOne({'userl': nuser}, function(e, d){
             console.log(d);
         if (!d) {
             console.log(e);
@@ -180,6 +199,7 @@ app.post('/register', function(req, res) {
             var hash = bcrypt.hashSync(req.body.pass, bcrypt.genSaltSync());
             gUsers.insert( {'user' : req.body.user,
                             'email': req.body.email,
+                            'userl': nuser,
                             'pass' : hash} );
             res.json({'status': true});
         } else {
