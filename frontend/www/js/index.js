@@ -30,6 +30,9 @@ function onPageLoad() {
         case 'mainpage':
             populateChallenges();
         break;
+        case 'prematchpage':
+            populateActivitiesM();
+        break;
         case 'actpage':
             populateActivities();
         break;
@@ -56,6 +59,9 @@ function onfriend(e) {
     jump('userinfopage');
 }
 
+function onactivitym(e) {
+    issueChallenge();
+}
 function onactivity(e) {
     gSelAct = $("#"+e.target.id).html();
     jump('actclubpage');
@@ -115,6 +121,27 @@ function joinClub() {
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
                 jump("actclubinfopage");
+            } 
+        },
+        error: function (responseData, textStatus, errorThrown) {
+        }
+    });
+}
+function unfriend() {
+    var formData={
+        "user": gUser,
+        "token": gToken,
+        "foe": $("#userheader").html(),
+    };
+    $.post({
+        url: 'http://johnwesthoff.com:3111/unfriend',
+        crossDomain: true,
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        processData: false,
+        success: function(responseData, textStatus, jqXHR) {
+            if (responseData.status) {
+                jump("friendpage");
             } 
         },
         error: function (responseData, textStatus, errorThrown) {

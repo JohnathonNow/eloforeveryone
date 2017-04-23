@@ -85,6 +85,10 @@
         <div class='view' id='actclubinfo'>Loading Club Info...</div>
         <div onclick='joinClub()' class='button'>Join Club</div>
     </div>
+    <div id=prematchpage class='page'>
+        <H2>Challenge In?</H2>
+        <div class='view' id='activitylistm'>Loading Activities...</div>
+    </div>
     <div id=matchpage class=page>
         <h2>Match Against Friend</h2>
         <div class='view' id='matchresults'>
@@ -99,7 +103,8 @@
     <div id=userinfopage class='page'>
         <H2 id='userheader'>User</H2>
         <div class='view' id='userinfo'>Loading User Info...</div>
-        <div onclick='issueChallenge();' class='button'>Challenge</div>
+        <div onclick='jump("prematchpage");' class='button'>Challenge</div>
+        <div onclick='unfriend();' class='button'>Unfriend</div>
     </div>
     <div class="bottom" id="bottom">
         <div class='buttonsmall' onclick='jumpi("actpage")'>Activities</div>

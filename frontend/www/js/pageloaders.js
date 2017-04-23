@@ -112,6 +112,32 @@ function populateMyClubs() {
         }
     });
 }
+function populateActivitiesM() {
+    $.get({
+        url: 'http://johnwesthoff.com:3111/activities',
+        crossDomain: true,
+        success: function(responseData, textStatus, jqXHR) {
+            if (responseData.status) {
+                var activities = responseData.activities;
+                gActNum = 0;
+                $('#activitylistm').empty();
+                if (activities) {
+                    for (var i = 0; i < activities.length; i += 1) {
+                        var name = activities[i]['name'];
+                        var newfriend='<div class=\'friend\'\
+                                       id=\'act'+gActNum+'\'\
+                                       onclick=\'onactivitym(event);\'\
+                                       >'+name+'</div>';
+                        gActNum += 1;
+                        $('#activitylistm').append(newfriend);
+                    } 
+                }
+            }
+        },
+        error: function (responseData, textStatus, errorThrown) {
+        }
+    });
+}
 function populateActivities() {
     $.get({
         url: 'http://johnwesthoff.com:3111/activities',
