@@ -14,6 +14,7 @@ var gClubInfo = null;
 var gUser = '';
 var gFoe = '';
 var gToken = '';
+var gChalId = '';
 
 function onLoad()
 {
@@ -63,6 +64,7 @@ function onfriend(e) {
 
 function onChal(i) {
     gSelAct = gChallenges[i].activity;
+    gChalId = gChallenges[i].id;
     if (gUser === gChallenges[i].user) {
         gFoe = gChallenges[i].foe;
     } else {
@@ -160,6 +162,33 @@ function unfriend() {
         }
     });
 }
+function sendScore() {
+    var formData={
+        "user": gUser,
+        "gActNumtoken": gToken,
+        "activity": gSelAct,
+        "id": gChalId,
+        "foe": gFoe,
+        "userscore": $('#myscore').html(),
+        "foescore": $('#theirscore').html(),
+    };
+    $.post({
+        url: 'http://johnwesthoff.com:3111/score',
+        crossDomain: true,
+        data: JSON.stringify(formData),
+        contentType: 'application/json',
+        processData: false,
+        success: function(responseData, textStatus, jqXHR) {
+            if (responseData.status) {
+                jump("mainpage");
+            } else {
+                jump("matchpage");
+            }
+        },
+        error: function (responseData, textStatus, errorThrown) {
+        }
+    });
+}
 function issueChallenge() {
     gFoe = $("#userheader").html();
     var formData={
@@ -176,6 +205,8 @@ function issueChallenge() {
         processData: false,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
+                gChalId = responseData.id;
+                console.log(gChalId);
                 jump("matchpage");
             } 
         },
@@ -250,6 +281,7 @@ function login()
         success: function(responseData, textStatus, jqXHR) {
             if (responseData['status']) {
                 gToken = responseData['token'];
+                gUser = responseData['user'];
                 console.log(gToken);
                 jump('mainpage');
             }
