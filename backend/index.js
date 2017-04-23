@@ -70,6 +70,7 @@ app.post('/login', function(req, res) {
 app.post('/newchallenge', function(req, res) {
     gChallenges.insert( {'user'       : req.body.user,
                          'foe'        : req.body.foe,
+                         'activity'   : req.body.activity,
                          'status'     : 'open',
                          'user_score' : 0,
                          'foe_score'  : 0} );
