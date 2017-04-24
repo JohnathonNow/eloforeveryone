@@ -67,8 +67,12 @@ function onChal(i) {
     gChalId = gChallenges[i]._id;
     if (gUser === gChallenges[i].user) {
         gFoe = gChallenges[i].foe;
+        $('#myscore').val(gChallenges[i].user_score);
+        $('#theirscore').val(gChallenges[i].foe_score);
     } else {
         gFoe = gChallenges[i].user;
+        $('#myscore').val(gChallenges[i].foe_score);
+        $('#theirscore').val(gChallenges[i].user_score);
     }
     jump("matchpage");
 }
@@ -208,6 +212,8 @@ function issueChallenge() {
             if (responseData.status) {
                 gChalId = responseData.id;
                 console.log(gChalId);
+                $('#myscore').val(0);
+                $('#theirscore').val(0);
                 jump("matchpage");
             } 
         },
