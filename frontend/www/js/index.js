@@ -64,7 +64,7 @@ function onfriend(e) {
 
 function onChal(i) {
     gSelAct = gChallenges[i].activity;
-    gChalId = gChallenges[i].id;
+    gChalId = gChallenges[i]._id;
     if (gUser === gChallenges[i].user) {
         gFoe = gChallenges[i].foe;
     } else {
@@ -163,14 +163,15 @@ function unfriend() {
     });
 }
 function sendScore() {
+    console.log(gChalId);
     var formData={
         "user": gUser,
-        "gActNumtoken": gToken,
+        "token": gToken,
         "activity": gSelAct,
         "id": gChalId,
         "foe": gFoe,
-        "userscore": $('#myscore').html(),
-        "foescore": $('#theirscore').html(),
+        "userscore": $('#myscore').val(),
+        "foescore": $('#theirscore').val(),
     };
     $.post({
         url: 'http://johnwesthoff.com:3111/score',
