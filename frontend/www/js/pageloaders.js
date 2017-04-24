@@ -12,17 +12,18 @@ function populateClubInfo() {
                     console.log(gClubInfo);
                     var header = '<div id="container">'+
                               '<div>User</div><div>Wins</div><div>'+
-                              'Losses</div><div>Draws</div>';
+                              'Losses</div><div>Draws</div><div>Rating</div></div>';
                     $('#actclubinfo').append(header);
                     for (var i = 0; i < gClubInfo.length; i += 1) {
                         var name = gClubInfo[i]['user'];
                         var wins = gClubInfo[i]['wins'];
                         var loss = gClubInfo[i]['losses'];
                         var draw = gClubInfo[i]['draws'];
+                        var elo  = gClubInfo[i]['score'].toFixed(0);
                         var row = '<div id="container">'+
                                   '<div>'+name+'</div><div>'+wins+
                                   '</div><div>'+loss+'</div><div>'+draw+
-                                  '</div>';
+                                  '</div><div>'+elo+'</div>';
                         var newfriend='<div class=\'friend\'\
                                        id=\'clubin'+i+'\'\
                                        onclick=\'onfriendclub('+i+');\'\
