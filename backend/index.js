@@ -256,14 +256,29 @@ app.get('/myclubs/:user', function(req, res) {
         });
 });
 app.post('/joinclub', function(req, res) {
-    gClubMembers.insert({'club': req.body.club,
-                   'activity': req.body.activity,
-                   'user': req.body.user,
-                   'score': 1000,
-                   'wins': 0,
-                   'losses': 0,
-                   'draws': 0,});
-    res.json({'status': true});
+    gClubMembers.findOne({'user': req.body.user,
+                          'activity': req.body.activity}, function(e, d){
+            console.log(d);
+        if (!d) {
+            gClubMembers.insert({'club': req.body.club,
+               'activity': req.body.activity,
+               'user': req.body.user,
+               'score': 1000,
+               'wins': 0,
+               'losses': 0,
+               'draws': 0,});
+            res.json({'status': true});
+        } else {
+            gClubMembers.remove(d);
+            gClubMembers.insert({'club': req.body.club,
+               'activity': req.body.activity,
+               'user': req.body.user,
+               'score': 1000,
+               'wins': 0,
+               'losses': 0,
+               'draws': 0,});
+        }
+    });
 });
 app.post('/clubs', function(req, res) {
     gClubs.insert({'name': req.body.name,
