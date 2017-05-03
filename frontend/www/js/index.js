@@ -16,6 +16,11 @@ var gFoe = '';
 var gToken = '';
 var gChalId = '';
 
+function toast(mes) {
+    window.plugins.toast.showShortTop(mes, function(a){}, 
+                                           function(b){alert(mes)});
+}
+
 function onLoad()
 {
     jump('startpage');
@@ -187,6 +192,7 @@ function sendScore() {
             if (responseData.status) {
                 jump("mainpage");
             } else {
+                toast("Resubmit when you both have entered the same scores.");
                 jump("matchpage");
             }
         },
@@ -290,7 +296,10 @@ function login()
                 gToken = responseData['token'];
                 gUser = responseData['user'];
                 console.log(gToken);
+                toast("Logged In!");
                 jump('mainpage');
+            } else {
+                toast("Loggin Failed!");
             }
         },
         error: function (responseData, textStatus, errorThrown) {
@@ -300,7 +309,8 @@ function login()
 function register()
 {
     if ($("#reg_password1").val() !== $("#reg_password2").val()) {
-        console.log("DIFFERENT");
+
+        toast("You entered two different passwords.");
         return;
     }
     var formData={
@@ -321,6 +331,8 @@ function register()
                 $("#password").val(formData['pass']);
                 $("#user").val(formData['user']);
                 login();
+            } else {
+                toast("Registration failed - perhaps the name is taken?");
             }
         },
         error: function (responseData, textStatus, errorThrown) {
