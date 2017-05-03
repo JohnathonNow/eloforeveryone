@@ -9,6 +9,9 @@ function populateClubInfo() {
                 console.log(gClubInfo);
                 $('#actclubinfo').empty();
                 if (gClubInfo) {
+                    gClubInfo.sort(function(a, b){
+                        return parseFloat(b.score) - parseFloat(a.score);
+                    });
                     console.log(gClubInfo);
                     var header = '<div id="container">'+
                               '<div>User</div><div>Wins</div><div>'+
@@ -43,15 +46,23 @@ function populateClubs() {
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
-                var clubs = responseData.clubs;
+                gClubs = responseData.clubs;
+                gClubs.sort(function(a, b){
+                    return parseFloat(b.score) - parseFloat(a.score);
+                });
                 gClubNum = 0;
+                var header = '<div id="container2">'+
+                             '<div>Club</div><div>Rating</div></div>';
                 $('#activityclublist').empty();
-                if (clubs) {
-                    for (var i = 0; i < clubs.length; i += 1) {
-                        var name = clubs[i]['name'];
+                $('#activityclublist').append(header);
+                if (gClubs) {
+                    for (var i = 0; i < gClubs.length; i += 1) {
+                        var name = '<div id="container2"><div>'+
+                                   gClubs[i]['name']+'</div><div>'+
+                                   gClubs[i]['score'].toFixed(0)+'</div>';
                         var newfriend='<div class=\'friend\'\
                                        id=\'club'+gClubNum+'\'\
-                                       onclick=\'onclub(event);\'\
+                                       onclick=\'onclub('+i+');\'\
                                        >'+name+'</div>';
                         gClubNum += 1;
                         $('#activityclublist').append(newfriend);

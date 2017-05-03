@@ -103,3 +103,11 @@ body {
   display: inline-block;
   text-align: center;
 }
+#container2 {
+  text-align: center;
+}
+#container2 div {
+  width: 50%;
+  display: inline-block;
+  text-align: center;
+}

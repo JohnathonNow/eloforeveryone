@@ -11,6 +11,7 @@ var gSelClub = '';
 var gMyClubs = null;
 var gChallenges = null;
 var gClubInfo = null;
+var gClubs = null;
 var gUser = '';
 var gFoe = '';
 var gToken = '';
@@ -90,12 +91,8 @@ function onactivity(e) {
     jump('actclubpage');
 }
 
-function onclub(e) {
-    console.log(e.target);
-    console.log(e.target.id);
-    gSelClub = $("#"+e.target.id).html();
-    console.log($("#"+e.target.id).html());
-    console.log(gSelClub);
+function onclub(i) {
+    gSelClub = gClubs[i].name;
     jump('actclubinfopage');
 }
 
