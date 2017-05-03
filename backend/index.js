@@ -24,6 +24,55 @@ var gActivities;
 var gClubs;
 var gClubMembers;
 
+MongoClient.connect(url, function(err, db) {
+    if (err != null) {
+        db.close();
+        process.exit();
+    } else {
+        gDB = db;
+        gUsers = db.collection('users');
+        gChallenges = db.collection('challenges');
+        gFriends = db.collection('friends');
+        gActivities = db.collection('activities');
+        gClubs = db.collection('clubs');
+        gClubMembers = db.collection('clubmembers');
+        app.listen(3111);
+    }
+});
+
+function doClubElo(d) {
+    gClubMembers.findOne({
+                   'activity': d.activity,
+                   'user': d.user}, function (e, user) {
+        if (user && !e) {
+            console.log(user);
+            gClubMembers.findOne({
+                           'activity': d.activity,
+                           'user': d.foe}, function (e, foe) {
+        if (foe && !e && user.club != foe.club) {
+        gClubs.findOne({'name': user.club}, function (e, userc) {
+            if (userc && !e) {
+                gClubs.findOne({'name': foe.club}, function (e, foec) {
+                if (foec && !e) {
+                    console.log(foec);
+                    console.log(userc);
+                    if (Math.abs(userc.score - foec.score) <= 400) {
+                        var Quser = Math.pow(10, userc.score / 400);
+                        var Qfoe  = Math.pow(10, foec.score  / 400);
+                        var Euser = Quser/(Quser+Qfoe);
+                        var Efoe  = Qfoe/(Qfoe+Quser);
+                        var Suser = d.user_score / (d.user_score + d.foe_score);
+                        var Sfoe  = d.foe_score  / (d.user_score + d.foe_score);
+                        userc.score += 16 * (Suser - Euser);
+                        foec.score  += 16 * (Sfoe  - Efoe);
+                    }
+                    gClubs.updateOne({"_id": userc._id}, userc);
+                    gClubs.updateOne({"_id": foec._id}, foec);
+                }
+            });
+        }
+    });}});}});
+}
 function doElo(d) {
     gClubMembers.findOne({
                    'activity': d.activity,
@@ -61,21 +110,6 @@ function doElo(d) {
     });
 }
 
-MongoClient.connect(url, function(err, db) {
-    if (err != null) {
-        db.close();
-        process.exit();
-    } else {
-        gDB = db;
-        gUsers = db.collection('users');
-        gChallenges = db.collection('challenges');
-        gFriends = db.collection('friends');
-        gActivities = db.collection('activities');
-        gClubs = db.collection('clubs');
-        gClubMembers = db.collection('clubmembers');
-        app.listen(3111);
-    }
-});
 app.post('/login', function(req, res) {
     try {
         var user = gUsers.findOne({"userl": req.body.user.toLowerCase()},
@@ -145,6 +179,7 @@ app.post('/score', function(req, res) {
                             d.foe_score == req.body.foescore) {
                             d.status = 'closed';
                             doElo(d);
+                            doClubElo(d);
                             gChallenges.updateOne({"_id": d._id}, d);
                             res.json({'status': true});
                         } else {
@@ -155,6 +190,7 @@ app.post('/score', function(req, res) {
                             d.user_score == req.body.foescore) {
                             d.status = 'closed';
                             doElo(d);
+                            doClubElo(d);
                             gChallenges.updateOne({"_id": d._id}, d);
                             res.json({'status': true});
                         } else {
@@ -285,7 +321,8 @@ app.post('/clubs', function(req, res) {
                    'activity': req.body.activity,
                    'location': req.body.location,
                    'description': req.body.description,
-                   'creator': req.body.user});
+                   'creator': req.body.user,
+                   'score': 1000,});
     res.json({'status': true});
 });
 app.get('/clubs/:activity', function(req, res) {
