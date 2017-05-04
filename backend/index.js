@@ -153,7 +153,6 @@ app.post('/efe/login', function(req, res) {
 });
 app.post('/efe/score', function(req, res) {
     console.log(req.body.id);
-    nuser = user.toLowerCase();
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
