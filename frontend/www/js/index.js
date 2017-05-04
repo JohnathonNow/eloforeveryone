@@ -110,7 +110,7 @@ function addFriend() {
         "friend": $("#af_user").val(),
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/friends',
+        url: 'https://johnwesthoff.com/efe/friends',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -133,7 +133,7 @@ function joinClub() {
         "activity": gSelAct,
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/joinclub',
+        url: 'https://johnwesthoff.com/efe/joinclub',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -154,7 +154,7 @@ function unfriend() {
         "foe": $("#userheader").html(),
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/unfriend',
+        url: 'https://johnwesthoff.com/efe/unfriend',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -180,7 +180,7 @@ function sendScore() {
         "foescore": $('#theirscore').val(),
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/score',
+        url: 'https://johnwesthoff.com/efe/score',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -201,12 +201,12 @@ function issueChallenge() {
     gFoe = $("#userheader").html();
     var formData={
         "user": gUser,
-        "gActNumtoken": gToken,
+        "token": gToken,
         "activity": gSelAct,
         "foe": gFoe,
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/newchallenge',
+        url: 'https://johnwesthoff.com/efe/newchallenge',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -234,7 +234,7 @@ function createClub() {
         "location": $("#ac_location").val(),
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/clubs',
+        url: 'https://johnwesthoff.com/efe/clubs',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -283,7 +283,7 @@ function login()
     };
     $.post({
         type: 'POST',
-        url: 'http://johnwesthoff.com:3111/login',
+        url: 'https://johnwesthoff.com/efe/login',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -317,7 +317,7 @@ function register()
     };
     $.post({
         type: 'POST',
-        url: 'http://johnwesthoff.com:3111/register',
+        url: 'https://johnwesthoff.com/efe/register',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
