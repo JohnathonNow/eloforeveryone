@@ -1,6 +1,6 @@
 function populateClubInfo() {
     $.get({
-        url: 'http://johnwesthoff.com:3111/clubmembers/'+
+        url: 'https://johnwesthoff.com/efe/clubmembers/'+
             gSelAct + "/" + gSelClub,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
@@ -42,7 +42,7 @@ function populateClubInfo() {
 }
 function populateClubs() {
     $.get({
-        url: 'http://johnwesthoff.com:3111/clubs/'+gSelAct,
+        url: 'https://johnwesthoff.com/efe/clubs/'+gSelAct,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
@@ -76,7 +76,7 @@ function populateClubs() {
 }
 function populateUserinfo() {
     $.get({
-        url: 'http://johnwesthoff.com:3111/myclubs/'+gSelFriend,
+        url: 'https://johnwesthoff.com/efe/myclubs/'+gSelFriend,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
@@ -101,7 +101,7 @@ function populateUserinfo() {
 }
 function populateMyClubs() {
     $.get({
-        url: 'http://johnwesthoff.com:3111/myclubs/'+gUser,
+        url: 'https://johnwesthoff.com/efe/myclubs/'+gUser,
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
@@ -126,7 +126,7 @@ function populateMyClubs() {
 }
 function populateActivitiesM() {
     $.get({
-        url: 'http://johnwesthoff.com:3111/activities',
+        url: 'https://johnwesthoff.com/efe/activities',
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
@@ -151,7 +151,7 @@ function populateActivitiesM() {
 }
 function populateActivities() {
     $.get({
-        url: 'http://johnwesthoff.com:3111/activities',
+        url: 'https://johnwesthoff.com/efe/activities',
         crossDomain: true,
         success: function(responseData, textStatus, jqXHR) {
             if (responseData.status) {
@@ -181,7 +181,7 @@ function populateChallenges() {
         "token": gToken,
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/challenges',
+        url: 'https://johnwesthoff.com/efe/challenges',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
@@ -220,7 +220,7 @@ function populateFriends() {
         "token": gToken,
     };
     $.post({
-        url: 'http://johnwesthoff.com:3111/friendlist',
+        url: 'https://johnwesthoff.com/efe/friendlist',
         crossDomain: true,
         data: JSON.stringify(formData),
         contentType: 'application/json',
