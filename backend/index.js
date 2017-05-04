@@ -120,7 +120,7 @@ function doElo(d) {
     });
 }
 
-app.post('/login', function(req, res) {
+app.post('/efe/login', function(req, res) {
     try {
         var user = gUsers.findOne({"userl": req.body.user.toLowerCase()},
             function(e, d) {
@@ -151,7 +151,7 @@ app.post('/login', function(req, res) {
     }
 
 });
-app.post('/score', function(req, res) {
+app.post('/efe/score', function(req, res) {
     console.log(req.body.id);
     nuser = user.toLowerCase();
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
@@ -222,7 +222,7 @@ app.post('/score', function(req, res) {
             }
         });});
 });
-app.post('/newchallenge', function(req, res) {
+app.post('/efe/newchallenge', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -243,7 +243,7 @@ app.post('/newchallenge', function(req, res) {
                             }
                          });});
 });
-app.post('/challenges', function(req, res) {
+app.post('/efe/challenges', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -265,7 +265,7 @@ app.post('/challenges', function(req, res) {
         });
         });
 });
-app.post('/unfriend', function(req, res) {
+app.post('/efe/unfriend', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -276,7 +276,7 @@ app.post('/unfriend', function(req, res) {
                      'friend': req.body.foe} );
     res.json({'status': true});});
 });
-app.post('/friends', function(req, res) {
+app.post('/efe/friends', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -287,7 +287,7 @@ app.post('/friends', function(req, res) {
                      'friend': req.body.friend} );
     res.json({'status': true});});
 });
-app.post('/friendlist', function(req, res) {
+app.post('/efe/friendlist', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -303,7 +303,7 @@ app.post('/friendlist', function(req, res) {
             }
         });});
 });
-app.post('/activities', function(req, res) {
+app.post('/efe/activities', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -313,7 +313,7 @@ app.post('/activities', function(req, res) {
     gActivities.insert({'name': req.body.name});
     res.json({'status': true});});
 });
-app.get('/activities', function(req, res) {
+app.get('/efe/activities', function(req, res) {
     gActivities.find().toArray(
         function(e, d) {
             if (!e && d) {
@@ -323,7 +323,7 @@ app.get('/activities', function(req, res) {
             }
         });
 })
-app.get('/clubmembers/:activity/:club', function(req, res) {
+app.get('/efe/clubmembers/:activity/:club', function(req, res) {
     gClubMembers.find({'activity': req.params.activity,
                        'club': req.params.club}).toArray(
         function(e, d) {
@@ -334,7 +334,7 @@ app.get('/clubmembers/:activity/:club', function(req, res) {
             }
         });
 });
-app.get('/myclubs/:user', function(req, res) {
+app.get('/efe/myclubs/:user', function(req, res) {
     gClubMembers.find({'user': req.params.user}).toArray(
         function(e, d) {
             if (!e && d) {
@@ -344,7 +344,7 @@ app.get('/myclubs/:user', function(req, res) {
             }
         });
 });
-app.post('/joinclub', function(req, res) {
+app.post('/efe/joinclub', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -375,7 +375,7 @@ app.post('/joinclub', function(req, res) {
         }
     });});
 });
-app.post('/clubs', function(req, res) {
+app.post('/efe/clubs', function(req, res) {
     gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
         function(_bad, _good){
             if (_bad || !_good) {
@@ -390,7 +390,7 @@ app.post('/clubs', function(req, res) {
                    'score': 1000,});
     res.json({'status': true});});
 });
-app.get('/clubs/:activity', function(req, res) {
+app.get('/efe/clubs/:activity', function(req, res) {
     gClubs.find({'activity': req.params.activity}).toArray(
         function(e, d) {
             if (!e && d) {
@@ -400,7 +400,7 @@ app.get('/clubs/:activity', function(req, res) {
             }
         });
 });
-app.post('/register', function(req, res) {
+app.post('/efe/register', function(req, res) {
     nuser = req.body.user.toLowerCase();
     gUsers.findOne({'userl': nuser}, function(e, d){
             console.log(d);
