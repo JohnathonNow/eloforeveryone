@@ -39,7 +39,17 @@ MongoClient.connect(url, function(err, db) {
         app.listen(3111);
     }
 });
+function verify(user, token) {
+    nuser = user.toLowerCase();
+    gUsers.findOne({'userl': user.toLowerCase(), 'token': token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
 
+        });
+}
 function doClubElo(d) {
     gClubMembers.findOne({
                    'activity': d.activity,
@@ -143,6 +153,13 @@ app.post('/login', function(req, res) {
 });
 app.post('/score', function(req, res) {
     console.log(req.body.id);
+    nuser = user.toLowerCase();
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gChallenges.findOne({"_id": ObjectId(req.body.id)},
         function(e, d) {
             if (!e && d) {
@@ -203,9 +220,15 @@ app.post('/score', function(req, res) {
             } else {
                 res.json({'status': false});
             }
-        });
+        });});
 });
 app.post('/newchallenge', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gChallenges.insert( {'user'       : req.body.user,
                          'foe'        : req.body.foe,
                          'activity'   : req.body.activity,
@@ -218,9 +241,15 @@ app.post('/newchallenge', function(req, res) {
                             } else {
                                 res.json({'status': false});
                             }
-                         });
+                         });});
 });
 app.post('/challenges', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gChallenges.find( {$or:[
                            {'user' : req.body.user,
                             'status': {$not: {$eq: 'closed'}}},
@@ -234,19 +263,37 @@ app.post('/challenges', function(req, res) {
                 res.json({'status': false});
             }
         });
-
+        });
 });
 app.post('/unfriend', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gFriends.remove({'user': req.body.user,
                      'friend': req.body.foe} );
-    res.json({'status': true});
+    res.json({'status': true});});
 });
 app.post('/friends', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gFriends.insert({'user': req.body.user,
                      'friend': req.body.friend} );
-    res.json({'status': true});
+    res.json({'status': true});});
 });
 app.post('/friendlist', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gFriends.find({"user": req.body.user}).toArray(
         function(e, d) {
             if (!e && d) {
@@ -254,11 +301,17 @@ app.post('/friendlist', function(req, res) {
             } else {
                 res.json({'status': false});
             }
-        });
+        });});
 });
 app.post('/activities', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gActivities.insert({'name': req.body.name});
-    res.json({'status': true});
+    res.json({'status': true});});
 });
 app.get('/activities', function(req, res) {
     gActivities.find().toArray(
@@ -292,6 +345,12 @@ app.get('/myclubs/:user', function(req, res) {
         });
 });
 app.post('/joinclub', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gClubMembers.findOne({'user': req.body.user,
                           'activity': req.body.activity}, function(e, d){
             console.log(d);
@@ -314,16 +373,22 @@ app.post('/joinclub', function(req, res) {
                'losses': 0,
                'draws': 0,});
         }
-    });
+    });});
 });
 app.post('/clubs', function(req, res) {
+    gUsers.findOne({'userl': req.body.user.toLowerCase(), 'token': req.body.token},
+        function(_bad, _good){
+            if (_bad || !_good) {
+                res.json({'status': false});
+                return;
+            }
     gClubs.insert({'name': req.body.name,
                    'activity': req.body.activity,
                    'location': req.body.location,
                    'description': req.body.description,
                    'creator': req.body.user,
                    'score': 1000,});
-    res.json({'status': true});
+    res.json({'status': true});});
 });
 app.get('/clubs/:activity', function(req, res) {
     gClubs.find({'activity': req.params.activity}).toArray(
